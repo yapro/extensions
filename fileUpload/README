@@ -1,0 +1,5 @@
+Author: lebnik
+класс загрузки файла в директорию
+возвращает путь к файлу или текст ошибки.
+если объявить массив $allowTypes['jpg']++; - можно применять проверку типа файлов
+Пример: fileUpload::i('windows-1251')->run('uploadFile', '/userDir', 'fileName.jpg', array('jpg'=>1) );
