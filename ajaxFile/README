@@ -1,0 +1,7 @@
+Функция ajaxFile обрабатывает INPUT поля с объявленным CSS классом, например ajaxFile, под адреса Ajax-файлов
+пример HTML-поля:
+	 <input type="text" class="ajaxFile" name="myImage" value="'.$image_cart.'" info="100/500/др. информация которую нужно передать вместе с файлом">
+пример запуска:
+	$.getScript("http://"+window.location.host+"/res/img/jquery/ajaxFile.js", function(){
+		ajaxFile(".ajaxFile", "http://"+window.location.host+"/uploader/files.php");
+	});
