@@ -1,12 +1,22 @@
 <?php
-/* http://pma-lebedenko.ru/lebnik_mysql_compare.php?remote_script=http://lebedenko.dev.ilook.ru/lebnik_mysql_compare.php
+/*
+
+Examples for use:
+
+1. show some database:
+
+http://pma-lebedenko.ru/mysqlCompare.php?dbname=DatabaseName
+
+2. compary two databases:
+
+http://extensions.local/mysqlCompare.php?remote_script=http://site.ru/mysqlCompare.php
+
 */
 error_reporting(E_ERROR | E_PARSE | E_COMPILE_ERROR);
 $dbms = 'mysql';
 $dbhost = 'localhost';
 $dbport = '';
-//$dbname = 'vseinstrumenti_wt';
-$dbname = 'conferenga';
+$dbname = isset($_GET['dbname'])? $_GET['dbname'] : 'mysql';
 $dbuser = 'root';
 $dbpasswd = '';
 
