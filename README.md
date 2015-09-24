@@ -1,2 +1,4 @@
-extensions
+PHP utils
 ==========
+
+Some personal utils
