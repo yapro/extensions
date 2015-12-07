@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+// This is utility for pretty print of json line as it does command utility: tail -f /var/log/file
+// for install as global - use command: ln -s /path/to/this/file /usr/bin/json
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+fclose(STDIN);// http://habrahabr.ru/post/134620/
+
+function writeln($text = '')
+{
+    if (empty($text)){
+        return;
+    }
+    $new = json_decode(trim($text), true);
+    if(is_array($new) && !empty($new)){
+        $trace = '';
+        if(!empty($new['context']['trace'])){
+            $trace = $new['context']['trace'];
+            unset($new['context']['trace']);
+        }
+        $text = json_encode($new, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE).PHP_EOL.$trace;
+    }
+    file_put_contents('php://stdout', $text.PHP_EOL, FILE_APPEND);
+}
+
+function getLastFtell(SplFileObject $file)
+{
+    $last = null;
+    while (!$file->eof()) {
+        $file->fgets();
+        $last = $file->ftell();
+    }
+    return $last;
+}
+
+if (empty($argv[1])){
+    writeln('Specify path to log file, example: json /var/log/file');
+    exit;
+}
+$path = $argv[1];
+$file = new SplFileObject($path);
+$ftell = getLastFtell($file);
+while (true) {
+    $file = new SplFileObject($path);
+    $ftellNew = getLastFtell($file);
+    if ($ftellNew !== $ftell){
+        $file->fseek($ftell);
+        while (!$file->eof()) {
+            $ftell = $file->ftell();
+            writeln($file->fgets());
+        }
+    }
+    usleep(100000);
+}
