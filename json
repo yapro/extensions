@@ -8,19 +8,25 @@ fclose(STDIN);// http://habrahabr.ru/post/134620/
 
 function writeln($text = '')
 {
-    if (empty($text)){
+    if (empty($text)) {
         return;
     }
     $new = json_decode(trim($text), true);
-    if(is_array($new) && !empty($new)){
+    if (is_array($new) && !empty($new)) {
         $trace = '';
-        if(!empty($new['context']['trace'])){
+        if (!empty($new['context']['trace'])) {
             $trace = $new['context']['trace'];
             unset($new['context']['trace']);
+        } elseif (!empty($new['extra']['trace'])) {
+            $trace = $new['extra']['trace'];
+            unset($new['extra']['trace']);
         }
-        $text = json_encode($new, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE).PHP_EOL.$trace;
+        if(substr($trace, 1, 35) === '#0 xdebug conditional breakpoint(1)'){
+            return;
+        }
+        $text = json_encode($new, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . PHP_EOL . $trace;
     }
-    file_put_contents('php://stdout', $text.PHP_EOL, FILE_APPEND);
+    file_put_contents('php://stdout', trim($text) . PHP_EOL, FILE_APPEND);
 }
 
 function getLastFtell(SplFileObject $file)
@@ -33,7 +39,7 @@ function getLastFtell(SplFileObject $file)
     return $last;
 }
 
-if (empty($argv[1])){
+if (empty($argv[1])) {
     writeln('Specify path to log file, example: json /var/log/file');
     exit;
 }
@@ -43,7 +49,7 @@ $ftell = getLastFtell($file);
 while (true) {
     $file = new SplFileObject($path);
     $ftellNew = getLastFtell($file);
-    if ($ftellNew !== $ftell){
+    if ($ftellNew !== $ftell) {
         $file->fseek($ftell);
         while (!$file->eof()) {
             $ftell = $file->ftell();
