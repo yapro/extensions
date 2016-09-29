@@ -6,6 +6,14 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 fclose(STDIN);// http://habrahabr.ru/post/134620/
 
+$file = '/var/tmp/ignored-errors';
+if (is_file($file)) {
+    $fileContent = file_get_contents($file);
+    $ignoredErrors = explode("\n", trim($fileContent));
+} else {
+    $ignoredErrors = [];
+}
+
 function writeln($text = '')
 {
     if (empty($text)) {
@@ -13,6 +21,12 @@ function writeln($text = '')
     }
     $new = json_decode(trim($text), true);
     if (is_array($new) && !empty($new)) {
+        if (!empty($new['message'])) {
+            global $ignoredErrors;
+            if (in_array($new['message'], $ignoredErrors, true)) {
+                return;
+            }
+        }
         $trace = '';
         if (!empty($new['context']['trace'])) {
             $trace = $new['context']['trace'];
