@@ -1,9 +1,11 @@
 #!/usr/bin/env php
 <?php
 // This is utility for pretty print of json line as it does command utility: tail -f /var/log/file
+// or pretty from stdOut: echo '{"hello": "world"}' | /path/to/this/file
 // for install as global - use command: ln -s /path/to/this/file /usr/bin/json
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+$stdInContent = trim(fgets(STDIN));
 fclose(STDIN);// http://habrahabr.ru/post/134620/
 
 $file = '/var/tmp/ignored-errors';
@@ -41,6 +43,11 @@ function writeln($text = '')
         $text = json_encode($new, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . PHP_EOL . $trace;
     }
     file_put_contents('php://stdout', trim($text) . PHP_EOL, FILE_APPEND);
+}
+
+if (!empty($stdInContent)) {
+    writeln($stdInContent);
+    return;
 }
 
 function getLastFtell(SplFileObject $file)
