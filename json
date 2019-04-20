@@ -2,8 +2,8 @@
 <?php
 // This is utility for pretty print of json line as it does command utility: tail -f /var/log/file
 // How to use: json /path/to/my.log
-// for install as global - use command: ln -s /path/to/this/file /usr/bin/json
-// Pretty from stdOut not implemented yet: echo '{"hello": "world"}' | /path/to/this/file
+// Pretty from stdOut: echo '{"hello": "world"}' | /path/to/this/file
+// For install as global - use command: ln -s /path/to/this/file /usr/bin/json
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 $stdInContent = trim(fgets(STDIN));
