@@ -1,13 +1,15 @@
 #!/usr/bin/env php
 <?php
 // This is utility for pretty print of json line as it does command utility: tail -f /var/log/file
-// or pretty from stdOut: echo '{"hello": "world"}' | /path/to/this/file
+// How to use: json /path/to/my.log
 // for install as global - use command: ln -s /path/to/this/file /usr/bin/json
+// Pretty from stdOut not implemented yet: echo '{"hello": "world"}' | /path/to/this/file
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 $stdInContent = trim(fgets(STDIN));
 fclose(STDIN);// http://habrahabr.ru/post/134620/
 
+// you can specify ignored strings in the file /var/tmp/ignored-errors
 $file = '/var/tmp/ignored-errors';
 if (is_file($file)) {
     $fileContent = file_get_contents($file);
